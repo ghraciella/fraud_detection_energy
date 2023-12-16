@@ -24,6 +24,8 @@
 | Target   |   fraud:1 , not fraud: 0.  | int64 | 
 
 
+<br>
+
 ---
 ---
 
@@ -47,5 +49,38 @@
 | New_index   | New_index. |  -  | 
 | Months_number | Month number. |  - | 
 | Counter_type| Type of counter. |  - | 
+
+
+<br>
+
+
+---
+---
+
+### Assumptions : based on features
+
+
+---
+
+Assuming the company's internal codes for representing different meter reading is as follows
+
+| feature column | description |
+|:--------|:------------------------|
+| 5 | Anomalies or exceptional situations. |
+| 6 | Reading due to change of address. |
+| 7 | Special reading (for irregular situations). |
+| 8 | Normal reading. |
+| 9  | Estimated reading. |
+| 203   |  Reading after meter replacement. |
+| 207   |  Different meter size or capacity. |
+| 413   |  Reading after maintenance or repair. |
+
+
+<br>
+
+
+---
+---
+
 
 
