@@ -136,4 +136,11 @@ dmypy.json
 .vscode
 
 # Data 
+# ignore data files
 data/
+.data/
+/data
+
+# ignore credentials
+.credentials/
+
