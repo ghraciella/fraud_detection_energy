@@ -12,17 +12,31 @@
 
 <br>
 
-* __Potential business value analysis__
-    - based on assumption :  $26434$ Tunisian Dinars loss per fraudulent client 
+<br>
 
-    ![business value stakeholder presentation](/images/initial_business_value_analysis.png)
+---
 
-    - frequency of fraudlent activities
+__Potential business value analysis__ :  based on assumption -  $26434$ Tunisian Dinars loss per fraudulent client. 
 
-    ![frequency of fraudlent activities stakeholder presentation](/images/fraud_frequency_demo.png)
+![business value stakeholder presentation](/images/initial_business_value_analysis.png)
 
-    - the fraud rate per client is also computed to estimate the total money each client defrauded the company of.
+
+<br>
+
+
+
+__Frequency of fraudlent activities__ : fraud rates for electricity and gas
+
+
+![frequency of fraudlent activities stakeholder presentation](/images/fraud_frequency_demo.png)
+
+
+<br>
+
+<br>
     
+* the fraud rate per client is also computed to estimate the total money each client defrauded the company of.
+
 
 <br>
 
