@@ -21,9 +21,8 @@
 
         ![frequency of fraudlent activities stakeholder presentation](/images/fraud_frequency_demo.png)
 
-    
     - the fraud rate per client is also computed to estimate the total money each client defrauded the company of.
-    - 
+    
 
 <br>
 
