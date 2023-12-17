@@ -1,4 +1,4 @@
-# Fraud Detection : Energy Finacial Data
+# Fraud Detection : Energy Financial Data (Utility Transactions)
 
 * __Company__ : `STEG - Société Tunisienne de L'Électricité et du Gaz`
 * __Problem__ : The  company  suffered  tremendous  losses  in  the  order  of  `$200$  million Tunisian Dinars` due to fraudulent manipulations of meters by consumers.
