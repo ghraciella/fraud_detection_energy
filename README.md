@@ -15,9 +15,9 @@
 * __Potential business value analysis__
     - based on assumption :  $26434$ Tunisian Dinars loss per fraudulent client 
 
-
         ![business value stakeholder presentation](/images/initial_business_value_analysis.png)
 
+    - frequency of fraudlent activities
 
         ![frequency of fraudlent activities stakeholder presentation](/images/fraud_frequency_demo.png)
 
