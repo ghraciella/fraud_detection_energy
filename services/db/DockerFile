@@ -1,0 +1,10 @@
+FROM postgres:latest
+
+COPY /data/processed/store_data.csv /data/
+
+# initialization scripts or database setup files into the container
+COPY . . /docker-entrypoint-initdb.d/
+
+
+
+

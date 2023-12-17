@@ -1,0 +1,8 @@
+
+python-dotenv==1.0.0
+psycopg2-binary
+SQLAlchemy==1.4.50
+requests==2.31.0
+pyspark==3.5.0
+apache-airflow==2.7.3
+kafka-python==2.0.2

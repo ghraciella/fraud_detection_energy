@@ -57,19 +57,26 @@ fraud_detection_energy_project/
 │  
 ├── images/
 │   
+├── notebooks/
+│   ├── stakeholder_presentation_fraud_detection.pdf
+│   ├── energy_fraud_detection.pdf
+│   └── ...
+│   
 ├── presentation/
+│   ├── stakeholder_presentation_fraud_detection.pdf
 │   ├── energy_fraud_detection.pdf
 │   └── ...
 │  
-├── src_code/
+├── src/
 │   ├── data_processing.py
 │   ├── models.py
 │   ├── Dockerfile
 │   ├── model_training.py
 │   ├── model_evaluation.py
 │   ├── model_test_predict.py
-│   ├── model_main.py
-│   └── model_deployment_monitoring.py
+│   ├── model_deployment_monitoring.py
+│   ├── Dockerfile
+│   └── detect.py
 │  
 ├── services/
 │   ├── airflow/
@@ -82,7 +89,7 @@ fraud_detection_energy_project/
 │   │   ├── data_preprocessing.py
 │   │   ├── analysis.py
 │   │   └── Dockerfile
-│   └── sql_scripts/
+│   └── db/ # postgres
 │       ├── create_tables.sql
 │       ├── queries.sql
 │       └── Dockerfile

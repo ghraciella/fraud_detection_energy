@@ -1,0 +1,31 @@
+# start from base image for airflow
+# official airflow image: FROM
+
+FROM apache/airflow:latest
+
+
+# to initialize and store all the airflow  configurations, DAGs and metadata database 
+# in this directory (export points to) when the airflow db init command is executed
+# to specify project directory: use ENV to set environment variable 'airflow_home'
+
+ENV AIRFLOW_HOME /fraud_detection_energy/airflow/airflowapp
+
+
+# Set the working directory inside the container
+WORKDIR /airflowapp
+
+# Copy the Airflow DAGs or configurations into the container
+COPY . /airflowapp
+
+# Copy the requirements.txt file to the working directory
+COPY requirements.txt .
+
+# Install the required Python packages
+RUN pip install -r requirements.txt
+
+
+# Execute scripts
+CMD ["airflow", "main.py"]
+
+
+

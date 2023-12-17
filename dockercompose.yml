@@ -1,0 +1,40 @@
+version: '2.3' 
+
+
+services:
+  src:
+    build:
+      context: ./src 
+    environment:
+      - ENVIRONMENT=production
+    volumes:
+      - ./src:/app # mount src directory into /app container directory
+    depends_on:
+      - postgres
+      - pyspark
+      - airflow
+
+
+  pyspark:
+    build:
+      context: ./services/pyspark 
+    volumes:
+      - ./pyspark:/pysparkapp # mount src directory into a /pysparkapp container directory
+
+
+  postgres:
+    build:
+      context: ./services/db 
+    volumes:
+      - ./db:/postgresapp # mount db directory into a /ostgresapp container directory
+
+
+  airflow:
+    image: apache/airflow:latest
+    build:
+      context: ./services/airflow 
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags # mount airflow/dags directory 
+      - ./airflow/config:/opt/airflow/config # mount airflow/config directory 
+
+
