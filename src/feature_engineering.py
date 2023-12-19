@@ -94,7 +94,6 @@ def cast_schema_types(data, params):
     return data
 
 
-@profile
 def column_mapper(data, params, column_name='counter_statue'):
 
     """
@@ -148,7 +147,7 @@ def counter_statue_mapper(data):
         420: np.nan, 769: np.nan, 
     }
 
-    data = column_mapper(data, params, column_name='tarif_type')
+    data = column_mapper(data, params, column_name='counter_statue')
 
     return data
 
@@ -167,10 +166,23 @@ def tarrif_type_mapper(data):
     """
 
     params = {
-        8: 0, 9: 0, 18: 0, 21:0, 24: 0, 
-        27:0, 30: 0, 42: 0, 10: 10, 11: 11,
-        12: 12, 13: 13, 14: 14, 15: 15,
-        29: 29,  40: 40, 45: 45,
+        8: 0, 
+        9: 0, 
+        18: 0, 
+        21:0, 
+        24: 0, 
+        27:0, 
+        30: 0, 
+        42: 0, 
+        10: 10, 
+        11: 11,
+        12: 12, 
+        13: 13, 
+        14: 14, 
+        15: 15,
+        29: 29,  
+        40: 40, 
+        45: 45,
     }
 
 

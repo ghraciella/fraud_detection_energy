@@ -78,7 +78,7 @@ from feature_engineering import (
 
 
 
-@profile
+
 def read_combine_dataframe(datapath= None):
 
     """
@@ -135,7 +135,7 @@ def read_dataset():
 
 
 
-@profile
+
 def data_wrangling(data):
 
     """
