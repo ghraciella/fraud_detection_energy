@@ -171,8 +171,8 @@ def data_wrangling(data):
 
     # checking percentage of missing data
     print(f"numbers of rows : {data.shape[0]}")
-    missing_value_rate(data, column_name=None, col=False)
-    missing_value_rate(data, column_name='counter_statue', col=True)
+    #missing_value_rate(data, column_name=None, col=False)
+    #missing_value_rate(data, column_name='counter_statue', col=True)
 
     print('done')
 
@@ -180,14 +180,13 @@ def data_wrangling(data):
     data = data.drop_duplicates()
     #data['counter_type'] = data['counter_type'].applymap(lambda col: col.str.replace(r'[^A-Za-z0-9\s]+', ' ', regex=True))
     print('done')
+
     # casting columns to specific types
     data = data.copy(deep=True)
-    #data = data.convert_dtypes()
 
     data['target'] = cast_schema_types(data, params={'target': 'int'})
     print('done')
 
-    print(data.columns.to_list())
     # convert dates to datetime format
     data['invoice_date'] = pd.to_datetime(data['invoice_date'], format='%Y-%m-%d')
     data['creation_date'] = pd.to_datetime(data['creation_date'], format='%d/%m/%Y')
