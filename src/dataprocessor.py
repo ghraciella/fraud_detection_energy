@@ -66,9 +66,10 @@ from feature_engineering import (
                 cast_schema_types,
                 #column_mapper,
                 counter_statue_mapper,
+                tarrif_type_mapper,
+                reading_remark_mapper,
                 create_new_feautures,
                 #drop_column,
-                #tariff_type_mapper,
                 )
 
 
@@ -129,25 +130,6 @@ def read_dataset():
     data = pd.merge(client_data, invoice_data, on="client_id", how="left")
     return data
 
-def missing_value_rate(data, column_name='counter_statue', col=True):
-
-    """
-
-    :param data: dataframe object - data
-    :param column_name: str - name of columns to map values to
-    :return: object - data
-
-    Description:
-
-    calculate percentage of missing values 
-    """
-
-    if col:
-        print(f'''percentage of missing values in {column_name} : {round(data[column_name].isna().sum()/data.shape[0]*100,4)} %''')
-    else:
-        print(f'''percentage of missing values in data : {round(data.isna().sum()/data.shape[0]*100,4)} %''')
-
-
 
 
 
@@ -185,45 +167,58 @@ def data_wrangling(data):
 
     # making column names consistent and rename
     data = rename_columns(data)
-
-    # dropping duplicates and special characters
-    data = data.drop_duplicates()
-    data = data.applymap(lambda text: re.sub(r'[^A-Za-z0-9\s]+', ' ', text))
-
-    # casting columns to specific types
-    data = data.copy(deep=True)
-    #data = data.convert_dtypes()
-
-    data = cast_schema_types(data, params={'target': 'int'})
-
-    # convert dates to datetime format
-    data['invoice_date'] = pd.to_datetime(data['invoice_date'], format='%Y-%m-%d')
-    data['creation_date'] = pd.to_datetime(data['creation_date'], format='%d/%m/%Y')
+    print('done')
 
     # checking percentage of missing data
     print(f"numbers of rows : {data.shape[0]}")
     missing_value_rate(data, column_name=None, col=False)
     missing_value_rate(data, column_name='counter_statue', col=True)
 
+    print('done')
+
+    # dropping duplicates and special characters
+    data = data.drop_duplicates()
+    #data['counter_type'] = data['counter_type'].applymap(lambda col: col.str.replace(r'[^A-Za-z0-9\s]+', ' ', regex=True))
+    print('done')
+    # casting columns to specific types
+    data = data.copy(deep=True)
+    #data = data.convert_dtypes()
+
+    data['target'] = cast_schema_types(data, params={'target': 'int'})
+    print('done')
+
+    print(data.columns.to_list())
+    # convert dates to datetime format
+    data['invoice_date'] = pd.to_datetime(data['invoice_date'], format='%Y-%m-%d')
+    data['creation_date'] = pd.to_datetime(data['creation_date'], format='%d/%m/%Y')
+    print('done')
+
+
 
     # check and drop rows with null values
-    error_indices = get_invalid_indicies(data)
-    data = data.drop(error_indices)
-    print(data.isnull().T.any())
+    #error_indices = get_invalid_indicies(data)
+    #data = data.drop(error_indices)
+    #print(data.isnull().T.any())
 
+    print('done')
 
     ## feature engineering
+
+    # bin values in columns
+    data = counter_statue_mapper(data)
+    data = tarrif_type_mapper(data)
+    data = reading_remark_mapper(data)
+    print('done')
+
     # create new features columns and drop columns
     data = create_new_feautures(data)
     #data = drop_column(data, col_name=['creation_date','invoice_date'])
+    print('done')
 
     # delete client with 0 consommation and 0 months_number
     data = data.drop(index=3985967 , axis=0)
 
-    # bin values in columns
-    data = counter_statue_mapper(data)
-    #data = tariff_type_mapper(data)
-
+    print('done')
 
     return data
 
@@ -255,6 +250,25 @@ def get_invalid_indicies(data):
     print(f"Indices causing ValueError: {error_indices}")
 
     return error_indices
+
+
+def missing_value_rate(data, column_name='counter_statue', col=True):
+
+    """
+
+    :param data: dataframe object - data
+    :param column_name: str - name of columns to map values to
+    :return: object - data
+
+    Description:
+
+    calculate percentage of missing values 
+    """
+
+    if col:
+        print(f'''percentage of missing values in {column_name} : {round(data[column_name].isna().sum()/data.shape[0]*100,4)} %''')
+    else:
+        print(f'''percentage of missing values in data : {round(data.isna().sum()/data.shape[0]*100,4)} %''')
 
 
 

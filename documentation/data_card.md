@@ -92,17 +92,17 @@ Assumption on cost of fraudlent activity, where total amount declared as lost fo
 <br>
 <br>
 
-Assumption on cost of fraudlent activity per client based on their computed fraudulent rate, where total amount declared as lost for STEG = $200,000,000$:
+Assumption on cost of fraudlent activity per client based on their computed fraudulent transactions, where total amount declared as lost for STEG = $200,000,000$:
 
 ---
 * total number of clients in dataset = $135,493$
 * total fraudulent clients in dataset = $7566$
-* assumed fraudulent rate per client :
-    - calculated as such: fraudulent rate per client = count of fraudulent transactions per client divide by total number of transactions per client then multiply by 100
-    - fraudulent_rate_per_client = fraudulent_transactions_per_client / total_number_transactions_per_client
+* assumed fraudulent rtransactions per client :
+    - calculated as such: fraudulent transactions per client = count of fraudulent transactions per client when target == 1 else fraudlent transactions = 0.
+    - 
 * assumed loss per client:
-    - calculated as such: assumed loss per client = fraud rate per client multiplied by the total amount declared to be lost to fraudulent activities divided by 100
-    - amount_lost_per_client = (fraudulent_rate_per_client / 100) * total_amount_lost
+    - calculated as such: assumed loss per client = fraud transactions per client multiplied by the total amount declared to be lost divided by sum of all fraud transactions
+    - amount_lost_per_client = (fraudulent_transactions_per_client) * (total_amount_lost / sum of fraudulent transactions) 
 
 
 

@@ -264,7 +264,6 @@ def counter_quantity_per_client(data:pd.DataFrame) -> pd.DataFrame:
     """
 
     data['counter_quantity'] = data.groupby('client_id')['counter_number'].count().reset_index()
-    # merge back? with data?
 
     return data
 
@@ -283,35 +282,37 @@ def money_lost_per_fraudlent_client(data:pd.DataFrame) -> pd.DataFrame:
 
     Assumption on cost of fraudlent activity per client based on their computed fraudulent rate,
     where total amount declared as lost for STEG = 200,000,000:
-    * total number of clients in dataset = 135,493
-    * total fraudulent clients in dataset = 7566
-    * assumed fraudulent rate per client :
-        - calculated as such: fraudulent rate per client = count of fraudulent transactions per client divide by total number of transactions per client then multiply by 100
-        - fraudulent_rate_per_client = fraudulent_transactions_per_client / total_number_transactions_per_client
+    * total number of clients in dataset = $135,493$
+    * total fraudulent clients in dataset = $7566$
+    * assumed fraudulent rtransactions per client :
+        - calculated as such: fraudulent transactions per client = count of fraudulent transactions per client when target == 1 else fraudlent transactions = 0.
+        - 
     * assumed loss per client:
-        - calculated as such: assumed loss per client = fraud rate per client multiplied by the total amount declared to be lost to fraudulent activities divided by 100
-        - amount_lost_per_client = (fraudulent_rate_per_client / 100) * total_amount_lost
+        - calculated as such: assumed loss per client = fraud transactions per client multiplied by the total amount declared to be lost divided by sum of all fraud transactions
+        - amount_lost_per_client = (fraudulent_transactions_per_client) * (total_amount_lost / sum of fraudulent transactions) 
 
 
     """
 
 
     total_money_lost = 200000000
-    total_fraudulent_clients = data.target.value_counts()[1]
+    
+    total_fraudulent_clients = len(data[data['target'] == 1].groupby('client_id'))
     assumed_loss_per_fraud_client = total_money_lost / total_fraudulent_clients
+    print(f"Assumed loss per fraudulent client: {assumed_loss_per_fraud_client}")
+    
 
-    print(f''' assumed loss per fraudulent client: {assumed_loss_per_fraud_client}''')
+    data['fraudulent_transactions'] = 0
+    fraudulent_transactions = data[data['target'] == 1].groupby('client_id').size()
+    valid_client_ids = data['client_id'].isin(fraudulent_transactions.index)
+    data.loc[valid_client_ids, 'fraudulent_transactions'] = data.loc[valid_client_ids, 'client_id'].map(fraudulent_transactions)
+    
+    data['total_client_transactions'] = 0
+    total_transactions = data.groupby('client_id').size()
+    data['total_client_transactions'] = data['client_id'].map(total_transactions)
 
-    fraud_transactions_per_client = data[data['target'] == 1].groupby('client_id').size()
-    total_transactions_per_client = data.groupby('client_id').size()
-
-    fraud_rate_per_client = (fraud_transactions_per_client / total_transactions_per_client) * 100
-
-    data['fraud_rate_per_client']= fraud_rate_per_client
-    data['amount_lost_per_client'] = (fraud_rate_per_client / 100) * total_money_lost
-
-
-
+    data['amount_lost_per_client'] = 0
+    data['amount_lost_per_client'] = data['fraudulent_transactions'] * (total_money_lost / data['fraudulent_transactions'].sum())
 
     return data
 
