@@ -25,36 +25,39 @@ try:
     import sqlalchemy
     from sqlalchemy import create_engine
 
-    from google.cloud import storage 
-    from google.cloud import compute 
-    from google.cloud import BlobWriter
-    from google.auth.transport.requests import AuthorizedSession
-    from google.resumable_media.requests import ResumableUpload
 
+    from google.cloud import storage 
+    from google.api_core.exceptions import NotFound
+    from google.resumable_media.requests import ResumableUpload
+    from google.auth.transport.requests import AuthorizedSession
 
 except ImportError as error:
     print(f"Installation of the required dependencies necessary! {error}")
 
     subprocess.check_call(["pip", "install", "python-dotenv"])
-
+    subprocess.check_call(["pip", "install", "python-dotenv"])
+    subprocess.check_call(["pip", "install", "-U", "google-cloud"])
+    subprocess.check_call(["pip", "install", "google-cloud-storage"])
+    subprocess.check_call(["pip", "install", "-U", "google-resumable-media"])
 
     print(f"Successful installation of the required dependencies necessary")
 
 
 import warnings
-warnings.filterwarnings('ignore')
-
+warnings.filterwarnings
 
 # custom imports
+
+from config import (
+    get_gsc_config,
+    )
+
 from config import (
                 get_aws_config,
                 get_rds_config,
                 get_pgrds_config,
                 )
 
-from config import (
-            get_gsc_config,
-            )
 
 
 
@@ -63,11 +66,10 @@ from config import (
 
 
 
-
-def create_gcp_bucket(data_files_path, bucket_name= 'energy_datasets'):
+def create_gcp_bucket(data_files_path, bucket_name= 'energy_data'):
 
     """
-    data lake: bucket creation and file storage 
+    data lake: bucket creation for the data lake and file storage 
 
 
     :param: 
@@ -76,38 +78,58 @@ def create_gcp_bucket(data_files_path, bucket_name= 'energy_datasets'):
     Description:
 
     data lake creation : 
+        - get configuration credentials for service account in the project
         - initialize google cloud storage client
-        - create bucket 
+        - if bucket doesn't exist, create bucket and set bucket options 
+                (location, storage_class, bucket access, labels)
         - get data from data sources or data file
-        - upload to bucket
+        - upload files to bucket
+        - set resumable upload incase of timeout error during upload
 
     - resumable uploads
 
 
     """
     
-    client = storage.client()
-    bucket = client.bucket(bucket_name)
 
-    if bucket.exists():
-        print(f"{bucket_name.name} already exists")
-    else:
+    gsc_config = get_gsc_config()
+    gcp_path = gsc_config["gcp_service_credentials_path"]
+    #client = storage.Client()
+    client = storage.Client.from_service_account_json(gcp_path)
+
+    try:
+        bucket = client.get_bucket(bucket_name)
+        print(f''' The '{bucket_name}' bucket already exists''')
+
+    except NotFound:
         bucket = client.create_bucket(bucket_name)
-        print(f"{bucket_name.name} created sucessfully!")
-
-
+        bucket.create(
+            location="europe-west3",  
+            storage_class="STANDARD",
+        )
+        print(f''' The '{bucket_name.name}' bucket created sucessfully!''')
 
     for path in data_files_path:
         file_name = path.split('/')[-1]
         blob_object = bucket.blob(file_name)
         file_exists = False
 
-        if blob_object.exists():
-            print(f'{file_name} object-blob already exists in {bucket_name}: {file_exists}')
+        if blob_object:
+            print(f'''The '{file_name}' object-blob already exists in '{bucket_name}': {file_exists}''')
 
-        if not file_exists:
+        large_file_check = 1024 * 1024
+        if not file_exists and  (os.path.getsize(path) <= large_file_check):
             blob_object.upload_from_filename(path)
-            print(f'{file_name} uploaded to {bucket_name}')
+            print(f'''Data file: '{file_name}' uploaded to '{bucket_name}' bucket.''')
+
+        else:
+            upload_url = ResumableUpload.build(blob_object.media_link, chunk_size=large_file_check)
+
+            with open(path, 'rb') as datafile:
+                stream = ResumableUpload(upload_url, datafile, chunk_size=large_file_check)
+                response = stream.transmit()
+
+            print(f'''Data file: '{file_name}' uploaded to '{bucket_name}' bucket.''')
 
     print("Done!")
 
