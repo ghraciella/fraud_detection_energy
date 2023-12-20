@@ -25,6 +25,12 @@ try:
     import sqlalchemy
     from sqlalchemy import create_engine
 
+    from google.cloud import storage 
+    from google.cloud import compute 
+    from google.cloud import BlobWriter
+    from google.auth.transport.requests import AuthorizedSession
+    from google.resumable_media.requests import ResumableUpload
+
 
 except ImportError as error:
     print(f"Installation of the required dependencies necessary! {error}")
@@ -45,6 +51,69 @@ from config import (
                 get_rds_config,
                 get_pgrds_config,
                 )
+
+from config import (
+            get_gsc_config,
+            )
+
+
+
+
+
+
+
+
+
+def create_gcp_bucket(data_files_path, bucket_name= 'energy_datasets'):
+
+    """
+    data lake: bucket creation and file storage 
+
+
+    :param: 
+    :return: object - 
+
+    Description:
+
+    data lake creation : 
+        - initialize google cloud storage client
+        - create bucket 
+        - get data from data sources or data file
+        - upload to bucket
+
+    - resumable uploads
+
+
+    """
+    
+    client = storage.client()
+    bucket = client.bucket(bucket_name)
+
+    if bucket.exists():
+        print(f"{bucket_name.name} already exists")
+    else:
+        bucket = client.create_bucket(bucket_name)
+        print(f"{bucket_name.name} created sucessfully!")
+
+
+
+    for path in data_files_path:
+        file_name = path.split('/')[-1]
+        blob_object = bucket.blob(file_name)
+        file_exists = False
+
+        if blob_object.exists():
+            print(f'{file_name} object-blob already exists in {bucket_name}: {file_exists}')
+
+        if not file_exists:
+            blob_object.upload_from_filename(path)
+            print(f'{file_name} uploaded to {bucket_name}')
+
+    print("Done!")
+
+
+
+
 
 
 
@@ -70,6 +139,7 @@ def configure_aws_session():
         )
     
     return session
+
 
 
 
