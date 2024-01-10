@@ -94,6 +94,7 @@ def get_kaggle_config():
     return kaggle_config
 
 
+
 def get_gsc_config():
     '''
     Function loads configuration details for google cloud BigQuery
@@ -107,7 +108,7 @@ def get_gsc_config():
 
     '''
 
-    needed_keys = ['project_id', 'dataset_id', 'table_id']
+    needed_keys = ['gcp_service_credentials_path', 'project_id', 'dataset_id', 'table_id']
     gsc_config = get_config(needed_keys)
 
     return gsc_config 

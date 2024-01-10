@@ -37,6 +37,16 @@ warnings.filterwarnings('ignore')
 #
 
 
+# encapsulation of custom feture engineering functionalities
+# rename function (rename_columns): rename the column names for consistency, has 1 argument (data)
+# drop columns (drop_column): drop columns not needed for analysis or modelling, has 2 argument (data, column_names list of strings)
+# cast_schema_types
+# 
+
+
+# encapsulate column mapper functions as one
+# 
+
 
 def rename_columns(data:pd.DataFrame) -> pd.DataFrame:
     """
